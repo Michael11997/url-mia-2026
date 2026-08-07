@@ -1,0 +1,3 @@
+Este es el archivo de prueba del Laboratorio 5.
+El programa debe contar las lineas, palabras y caracteres.
+Michael Gutierrez estudia Ingenieria en Sistemas.
