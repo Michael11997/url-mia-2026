@@ -1,0 +1,4 @@
+Fecha,Producto,Cantidad
+04/09/2026,Laptop,2
+04/09/2026,Teclado,5
+04/09/2026,Monitor,3
