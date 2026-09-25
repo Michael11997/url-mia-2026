@@ -1,0 +1,2 @@
+﻿Laboratorio No. 2 Semana 12
+Prueba de Azure Blob Storage
