@@ -1,0 +1,61 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '9.x'
+  azureSubscription: 'MIA_Connection'
+  appName: 'mia-semana14-michael11997'
+  projectPath: 'semana-14/lab1/WebStorageSample/WebStorageSample.csproj'
+  projectDir: 'semana-14/lab1/WebStorageSample'
+
+steps:
+
+# 1. Instalar .NET 9
+- task: UseDotNet@2
+  displayName: 'Instalar .NET 9 SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '$(dotnetVersion)'
+
+# 2. Restaurar dependencias
+- task: DotNetCoreCLI@2
+  displayName: 'Restaurar dependencias'
+  inputs:
+    command: 'restore'
+    projects: '$(projectPath)'
+
+# 3. Configurar ambiente de producción
+- powershell: |
+    Copy-Item "$(projectDir)\.env.production" "$(projectDir)\.env" -Force
+  displayName: 'Configurar .env de producción'
+
+# 4. Compilar aplicación
+- task: DotNetCoreCLI@2
+  displayName: 'Compilar aplicación'
+  inputs:
+    command: 'build'
+    projects: '$(projectPath)'
+    arguments: '--configuration $(buildConfiguration) --no-restore'
+
+# 5. Publicar aplicación
+- task: DotNetCoreCLI@2
+  displayName: 'Publicar aplicación'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '$(projectPath)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish --no-build'
+    zipAfterPublish: true
+
+# 6. Desplegar en Azure App Service
+- task: AzureWebApp@1
+  displayName: 'Desplegar en Azure App Service'
+  inputs:
+    azureSubscription: '$(azureSubscription)'
+    appType: 'webApp'
+    appName: '$(appName)'
+    package: '$(Build.ArtifactStagingDirectory)/publish/**/*.zip'

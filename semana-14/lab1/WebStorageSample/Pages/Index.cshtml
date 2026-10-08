@@ -1,0 +1,78 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Azure Blob Storage";
+}
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">
+        Archivos en Azure Blob Storage
+    </h1>
+
+    <p>
+        Contenedor:
+        <strong>default</strong>
+    </p>
+
+    @if (!string.IsNullOrEmpty(Model.Mensaje))
+    {
+        <div class="alert alert-success">
+            @Model.Mensaje
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Subir archivo
+        </div>
+
+        <div class="card-body">
+            <form method="post"
+                  enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <input asp-for="Archivo"
+                           type="file"
+                           class="form-control" />
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Subir archivo
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Archivos almacenados
+        </div>
+
+        <div class="card-body">
+
+            @if (Model.Archivos.Count == 0)
+            {
+                <p>
+                    No hay archivos en el contenedor.
+                </p>
+            }
+            else
+            {
+                <ul class="list-group">
+
+                    @foreach (var archivo in Model.Archivos)
+                    {
+                        <li class="list-group-item">
+                            @archivo
+                        </li>
+                    }
+
+                </ul>
+            }
+
+        </div>
+    </div>
+
+</div>
